@@ -81,7 +81,8 @@ export class UI {
   constructor() {
     // UI images and font resolved through the central loader (works in dev, build and subfolders)
     const rootStyle = document.documentElement.style;
-    for (const n of UI_IMAGES) rootStyle.setProperty(`--img-${n.replace(/_/g, '-')}`, `url("${asset(`ui/${n}.png`)}")`);
+    // absolute URLs: a relative url() inside a CSS variable would resolve against the stylesheet's folder
+    for (const n of UI_IMAGES) rootStyle.setProperty(`--img-${n.replace(/_/g, '-')}`, `url("${new URL(asset(`ui/${n}.png`), document.baseURI).href}")`);
     if ('FontFace' in window) {
       const face = new FontFace('Lora', `url("${asset('fonts/Lora-Variable.ttf')}")`, { weight: '400 700' });
       face.load().then((f) => document.fonts.add(f)).catch(() => undefined);
