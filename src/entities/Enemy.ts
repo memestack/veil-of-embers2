@@ -105,6 +105,10 @@ export class Enemy {
     this.flashSprite = new Sprite(Texture.EMPTY);
     this.flashSprite.anchor.set(0.5, def.anchorY);
     this.flashSprite.visible = false;
+    if (def.spriteScale) {
+      this.sprite.scale.set(def.spriteScale);
+      this.flashSprite.scale.set(def.spriteScale);
+    }
     this.root.addChild(this.sprite, this.flashSprite);
     this.shadow = new Sprite(assets.tex('fx', def.shadow));
     this.shadow.anchor.set(0.5);
@@ -161,7 +165,7 @@ export class Enemy {
       }
     } else this.flashSprite.visible = false;
     // burn: orange tint; slow: cyan tint
-    this.sprite.tint = this.burnT > 0 ? 0xffc8a0 : this.slowT > 0 ? 0xb8e8ff : 0xffffff;
+    this.sprite.tint = this.burnT > 0 ? 0xffc8a0 : this.slowT > 0 ? 0xb8e8ff : this.def.baseTint ?? 0xffffff;
   }
 
   /** Resets state for pool reuse (same species). */
@@ -187,7 +191,7 @@ export class Enemy {
     this.root.alpha = 1;
     this.root.rotation = 0;
     this.shadow.visible = true;
-    this.sprite.tint = 0xffffff;
+    this.sprite.tint = this.def.baseTint ?? 0xffffff;
   }
 
   /** Death frame (authored dissolve). Returns false when the animation has finished. */
@@ -199,7 +203,7 @@ export class Enemy {
     if (i >= fr.length) return false;
     this.sprite.texture = fr[i];
     this.flashSprite.visible = false;
-    this.sprite.tint = 0xffffff;
+    this.sprite.tint = this.def.baseTint ?? 0xffffff;
     this.root.position.set(Math.round(this.x), Math.round(this.y - this.z));
     this.shadow.alpha = 0.85 * (1 - i / fr.length);
     return true;

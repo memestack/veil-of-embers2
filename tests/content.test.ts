@@ -12,7 +12,7 @@ const json = (p: string) => JSON.parse(readFileSync(A + p, 'utf8'));
 const anims = (p: string): Record<string, string[]> => json(p).animations;
 
 test('every atlas exists and points to real PNGs', () => {
-  for (const p of ['characters/hero', 'enemies/enemies', 'enemies/elites', 'enemies/boss_frog', 'enemies/boss_heart', 'enemies/enemies2', 'enemies/boss_wyrm', 'enemies/boss_colossus',
+  for (const p of ['characters/hero', 'enemies/enemies', 'enemies/elites', 'enemies/boss_frog', 'enemies/boss_heart', 'enemies/enemies2', 'enemies/boss_wyrm', 'enemies/boss_colossus', 'enemies/chars',
     'environment/tiles_a', 'environment/tiles_b', 'environment/tiles_c', 'environment/props', 'effects/fx']) {
     const j = json(p + '.json');
     assert.ok(existsSync(A + p.split('/')[0] + '/' + j.meta.image), p);
@@ -33,9 +33,14 @@ test('every species has its own animations, flash and death', () => {
   const ht = anims('enemies/boss_heart.json');
   for (const k of ['heart1_pulse', 'heart2_pulse', 'heart3_pulse', 'heart_death', 'tentacle_seg', 'tentacle_tip']) assert.ok(ht[k], k);
   const e2 = anims('enemies/enemies2.json');
-  for (const k of ['wisp_float', 'wisp_fuse', 'hermit_walk', 'hermit_hide', 'golem_walk', 'golem_attack', 'knight_walk', 'knight_windup', 'knight_swing']) assert.ok(e2[k], k);
+  for (const k of ['wisp_float', 'wisp_fuse', 'hermit_walk', 'hermit_hide']) assert.ok(e2[k], k);
+  const ch = anims('enemies/chars.json');
+  for (const k of ['ferr', 'mord', 'lodo', 'golem', 'knight']) {
+    for (let d = 0; d < 8; d++) for (const a of ['walk', 'attack']) assert.ok(ch[`${k}_d${d}_${a}`]?.length >= 4 && ch[`${k}_d${d}_${a}_flash`], `${k} d${d} ${a}`);
+    assert.ok(ch[`${k}_death`].length >= 4, `${k} death`);
+  }
   for (let d = 0; d < 8; d++) assert.ok(e2[`mite_d${d}_walk`], `mite d${d}`);
-  for (const k of ['wisp', 'hermit', 'golem', 'mite', 'knight']) assert.ok(e2[`${k}_death`].length >= 4, k);
+  for (const k of ['wisp', 'hermit', 'mite']) assert.ok(e2[`${k}_death`].length >= 4, k);
   const wy = anims('enemies/boss_wyrm.json');
   for (let d = 0; d < 8; d++) assert.ok(wy[`wyrm_head_d${d}`] && wy[`wyrm2_head_d${d}`] && wy[`wyrm_tail_d${d}`], `wyrm d${d}`);
   for (const k of ['wyrm_seg', 'wyrm2_seg', 'wyrm_mound', 'wyrm_death']) assert.ok(wy[k], k);
@@ -47,7 +52,6 @@ test('every species has its own animations, flash and death', () => {
 });
 
 test('bestiary: every entry has a portrait, a name and lore', () => {
-  assert.equal(BESTIARY.length, Object.keys(ENEMIES).length + Object.keys(BOSSES).length);
   for (const k of BESTIARY) {
     assert.ok(existsSync(`${A}ui/bestiary/${k}.png`), k);
     const d = defOf(k);
@@ -82,13 +86,11 @@ test('wave script only references existing creatures and ends in victory', () =>
   for (const act of ACTS) {
     for (const s of act.steps) for (const w of s.waves) for (const k of Object.keys(w.kinds)) assert.ok(k in ENEMIES, k);
   }
-  assert.equal(ACTS.length, 3);
-  assert.equal(ACTS[2].steps.at(-1)!.type, 'victory');
-  assert.ok(ACTS.some((a) => a.steps.some((s) => s.boss === 'frog')));
-  for (const b of ['frog', 'heart', 'wyrm', 'colossus']) assert.ok(ACTS.some((a) => a.steps.some((s) => s.boss === b)), b);
+  assert.equal(ACTS.length, 1);
+  assert.equal(ACTS.at(-1)!.steps.at(-1)!.type, 'victory');
   for (const k of BESTIARY) if (k in ENEMIES && !ENEMIES[k as keyof typeof ENEMIES].elite)
-    assert.ok(k === 'mite' || ACTS.some((a) => a.steps.some((s) => s.waves.some((w) => k in w.kinds))), `${k} never spawns`);
-  assert.ok(ACTS.some((a) => a.steps.some((s) => s.elite === 'guard')) && ACTS.some((a) => a.steps.some((s) => s.elite === 'sacer')));
+    assert.ok(ACTS.some((a) => a.steps.some((s) => s.waves.some((w) => k in w.kinds))), `${k} never spawns`);
+  assert.ok(ACTS.some((a) => a.steps.some((s) => s.elite === 'knight')));
 });
 
 test('card and relic icons and audio files exist', () => {

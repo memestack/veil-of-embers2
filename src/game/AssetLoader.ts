@@ -12,6 +12,7 @@ const ATLASES = {
   enemies: 'enemies/enemies.json',
   elites: 'enemies/elites.json',
   enemies2: 'enemies/enemies2.json',
+  chars: 'enemies/chars.json',
   boss_wyrm: 'enemies/boss_wyrm.json',
   boss_colossus: 'enemies/boss_colossus.json',
   boss_frog: 'enemies/boss_frog.json',
@@ -69,7 +70,9 @@ export class AssetLoader {
       names.map(async (n) => {
         try {
           const sheet = (await Assets.load(asset(ATLASES[n]))) as Spritesheet;
-          for (const tex of Object.values(sheet.textures)) tex.source.scaleMode = 'nearest';
+          // hand-made high-resolution characters are downsampled on screen: smooth filtering keeps them clean
+          const mode = n === 'hero' || n === 'chars' ? 'linear' : 'nearest';
+          for (const tex of Object.values(sheet.textures)) tex.source.scaleMode = mode;
           this.sheets[n] = sheet;
         } catch (e) {
           console.error('Failed to load atlas', n, e);

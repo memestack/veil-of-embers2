@@ -123,7 +123,7 @@ export class Fx {
   }
 
   afterimage(tex: Texture, x: number, y: number, flip: boolean, tint = 0xffb060): void {
-    // the particle uses a centred anchor; the hero frame is 64 px with the foot at 55 → -23 offset
-    this.w.particles.emit({ x, y: y - 23, life: 0.28, tex, alpha: 0.55, alphaEnd: 0, add: true, tint, scale: 1, flip });
+    // the particle uses a centred anchor; the hero sprite's foot sits at 90% of the frame height
+    this.w.particles.emit({ x, y: y - tex.height * 0.4, life: 0.28, tex, alpha: 0.55, alphaEnd: 0, add: true, tint, scale: 1, flip });
   }
 }

@@ -223,6 +223,7 @@ export class Game {
 
   /** Starts a fresh run at act `i`; later acts grant catch-up levels and cards. */
   private startAt(i: number): void {
+    i = Math.max(0, Math.min(ACTS.length - 1, i));
     this.run = this.baseRun();
     store.data.meta.runs++;
     if (i > 0) {
@@ -353,7 +354,7 @@ export class Game {
     const w = this.world!;
     const meta = store.data.meta;
     if (this.victory) {
-      this.run.actsDone = 3;
+      this.run.actsDone = ACTS.length;
       meta.wins++;
       meta.bestTime = meta.bestTime ? Math.min(meta.bestTime, this.run.time) : this.run.time;
       store.data.checkpoint = null;

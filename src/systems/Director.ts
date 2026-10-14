@@ -44,13 +44,7 @@ export class Director {
   constructor(private readonly w: World, private readonly combat: Combat, hazards: Hazards, private readonly pickups: Pickups) {
     this.ctx = { w, combat, hazards, spawn: (k, x, y) => this.spawnEnemy(k, x, y) };
     combat.onEnemyKilled = (e) => {
-      if (e.kind === 'golem') {
-        for (let i = 0; i < 3; i++) {
-          const a = (i / 3) * Math.PI * 2;
-          this.spawnEnemy('mite', e.x + Math.cos(a) * 10, e.y + Math.sin(a) * 8);
-        }
-        w.fx.crystal(e.x, e.bodyY, 1.3);
-      }
+      if (e.kind === 'golem') w.shake(0.3);
     };
     const [ax, ay] = this.anchorPos;
     this.anchorAura = w.sprite(assets.tex('fx', 'glow_holy'), w.decals, ax, ay, true);

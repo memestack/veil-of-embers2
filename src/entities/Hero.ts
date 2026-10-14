@@ -40,7 +40,7 @@ export class Hero {
   constructor() {
     for (const [k, v] of Object.entries(assets.sheet('hero').animations)) this.A[k] = v;
     this.sprite = new Sprite(this.A['hero_down_idle'][0]);
-    this.sprite.anchor.set(0.5, 55 / 64);
+    this.sprite.anchor.set(0.5, 0.9);
     this.root.addChild(this.sprite);
     this.shadow = new Sprite(assets.tex('fx', 'shadow_m'));
     this.shadow.anchor.set(0.5);

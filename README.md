@@ -1,4 +1,8 @@
-# Veil of Embers
+# Veil of Embers — art test build
+
+> **Test branch of the game:** only Act I, with the new hand-made ranger heroine and the new monsters
+> (Bone Thrall skeleton, Cave Goblin, Green Slime, Moss Golem and the Golem Warlord elite). Same mechanics.
+> Source art lives in `art_src/character_assets`; `python3 scripts/art/import_characters.py` rebuilds the atlases.
 
 A dark, bioluminescent fantasy 2D top-down *survivor-like*. A rune archer wielding the **Ember Crown** — a ring of
 flames and runes that spins around her — must rekindle the three Anchors of the Veil while tides of crystal

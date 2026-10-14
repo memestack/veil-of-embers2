@@ -146,7 +146,7 @@ export class UI {
         <button class="btn" data-a="play">PLAY<span class="sub">new campaign</span></button>
         ${hasCheckpoint ? '<button class="btn" data-a="cont">CONTINUE<span class="sub">resume from the saved act</span></button>' : ''}
         <div class="sec">
-        <button class="btn" data-a="campaign">Campaign Map<span class="sub">${meta.maxAct + 1} / 3 acts discovered</span></button>
+        <button class="btn" data-a="campaign">Campaign Map<span class="sub">${meta.maxAct + 1} / ${ACTS.length} acts discovered</span></button>
         <button class="btn" data-a="bestiary">Bestiary<span class="sub">${seen} / ${BESTIARY.length} creatures</span></button>
         <button class="btn" data-a="relics">Reliquary</button>
         <button class="btn" data-a="records">Records</button>
@@ -231,7 +231,7 @@ export class UI {
         <div>Defeats <b>${meta.deaths}</b></div><div>Best victory time <b>${meta.bestTime ? fmtTime(meta.bestTime) : '—'}</b></div>
         <div>Total creatures slain <b>${meta.totalKills.toLocaleString('en-US')}</b></div><div>Most kills in a run <b>${meta.bestKills}</b></div>
         <div>Highest level <b>${meta.bestLevel}</b></div><div>Bosses slain <b>${meta.bossesSlain}</b></div>
-        <div>Acts discovered <b>${meta.maxAct + 1} / 3</b></div><div>Bestiary <b>${seen} / ${BESTIARY.length}</b></div>
+        <div>Acts discovered <b>${Math.min(meta.maxAct + 1, ACTS.length)} / ${ACTS.length}</b></div><div>Bestiary <b>${seen} / ${BESTIARY.length}</b></div>
         <div>Amber Embers <b>${meta.coins}</b></div><div>Relics owned <b>${meta.unlocked.length} / ${META_ITEMS.length}</b></div>
       </div></div>`,
       onClose,
@@ -290,14 +290,14 @@ export class UI {
   howTo(onClose: () => void): void {
     this.modal(
       `<h2>How to Play</h2>
-      <p>Rekindle the three <b>Anchors of the Veil</b> and destroy the Heart of the rift. Survive the creature tides, face elites and bosses.</p>
+      <p>Rekindle the <b>Anchor of the Veil</b> and defeat the Golem Warlord. Survive the creature tides, face elites and bosses.</p>
       <p><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or arrows — move · Your <b>Rune Arrows</b> fire on their own at the nearest enemy.</p>
       <p><kbd>Space</kbd> — short dash with invulnerability (passes through projectiles and shockwaves).</p>
       <p><kbd>Q</kbd> — <b>Crown Pulse</b>: the Ember Crown expands, pushes back and ignites (costs energy).</p>
       <p><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> — choose a card on level up · <kbd>Esc</kbd> — pause.</p>
       <p><span style="color:var(--jade)">Jade</span> cards are direct upgrades, <span style="color:var(--amethyst)">Amethyst</span> cards bring new weapons and effects, <span style="color:var(--gold)">Solar Gold</span> cards transform your arsenal — including the combos <b>Blazing Tornado</b>, <b>Thunder Shard</b> and <b>Circular Dawn</b>.</p>
       <p><span style="color:var(--blood)">Red dashed</span> areas on the floor announce attacks: step out or dash through. Burning ground hurts — don't linger.</p>
-      <p>Bosses: the <b>Ash Wyrm</b> burrows and resurfaces under one of its mounds; the <b>Glass Colossus</b> marks its fists and crystal rain on the floor.</p>
+      <p>Elite: the <b>Golem Warlord</b> raises its fists before a wide sweep and leaves burning ground behind.</p>
       <p>Touch: drag on the left side to move; Dash and Pulse buttons on the right.</p>`,
       onClose,
     );
@@ -562,11 +562,11 @@ export class UI {
     const ups = Object.entries(r.levels).filter(([id, v]) => v > 0 && CARD_BY_ID[id] && CARD_BY_ID[id].kind !== 'heal');
     s.innerHTML = `<div class="panel results">
       <h2 style="color:${r.victory ? 'var(--gold)' : 'var(--blood)'}">${r.victory ? 'The Veil is sealed' : 'The ember went out'}</h2>
-      <p style="text-align:center">${r.victory ? 'All three Anchors burn again and the Heart of the Veil is silent. The garden breathes.' : 'The tide won this time — but every attempt reveals new combinations. Try again.'}</p>
+      <p style="text-align:center">${r.victory ? 'The Anchor burns again and the Golem Warlord has fallen. The garden breathes — for now.' : 'The tide won this time — but every attempt reveals new combinations. Try again.'}</p>
       <div class="grid">
         <div>Time <b>${fmtTime(r.time)}</b></div><div>Enemies slain <b>${r.kills}</b></div>
         <div>Damage dealt <b>${Math.round(r.damage).toLocaleString('en-US')}</b></div><div>Level reached <b>${r.level}</b></div>
-        <div>Acts cleared <b>${r.actsDone} / 3</b></div><div>Amber Embers <b>+${r.coins}</b></div>
+        <div>Acts cleared <b>${r.actsDone} / ${ACTS.length}</b></div><div>Amber Embers <b>+${r.coins}</b></div>
       </div>
       <div class="ups">${ups.map(([id, v]) => `<img src="${icon(CARD_BY_ID[id].icon)}" title="${CARD_BY_ID[id].name} lv ${v}" alt="${CARD_BY_ID[id].name}">`).join('')}</div>
       <div class="row"><button class="btn" data-a="replay">${r.victory ? 'Play again' : 'Try again'}</button><button class="btn" data-a="menu">Main menu</button></div></div>`;
