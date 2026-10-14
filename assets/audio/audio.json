@@ -1,0 +1,40 @@
+{
+ "sfx": [
+  "arrow",
+  "fire",
+  "pulse",
+  "lance",
+  "thunder",
+  "glass",
+  "wind",
+  "dash",
+  "hurt",
+  "die1",
+  "die2",
+  "xp",
+  "heal",
+  "card_open",
+  "card_select",
+  "rare",
+  "legendary",
+  "anchor",
+  "victory",
+  "defeat",
+  "ui_hover",
+  "ui_click",
+  "croak",
+  "slam",
+  "telegraph",
+  "explosion",
+  "levelup",
+  "spit",
+  "summon",
+  "portal"
+ ],
+ "music": {
+  "menu": 53.33333,
+  "combat_base": 51.42857,
+  "combat_drive": 51.42857,
+  "boss": 30.47619
+ }
+}
